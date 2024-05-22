@@ -1,0 +1,57 @@
+body {
+    background-image: url("guessing-game.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.7); 
+    width: 60vh;
+    height: 60vh;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+}
+
+h1, h2 {
+    font-weight: 800;
+}
+
+#guess{
+    width: 50%;
+    height:  3em;
+    border-style:dotted;
+    border-radius: 10px;
+}
+
+#guess:hover{
+    border: 2px solid rgb(163, 30, 30);
+    border-radius: 10px;
+}
+
+.btn{
+    width: 30%;
+    height:  2em;
+    font-weight: 800;
+    border-radius: 10px;
+    color: #fff;
+    background: #000;
+}
+
+.btn {
+    width: 30%;
+    height:  2em;
+    font-weight: 800;
+    border-radius: 10px;
+    color: #000; /* Set the font color to black */
+    background: #fff; /* Set the background color to white */
+}
