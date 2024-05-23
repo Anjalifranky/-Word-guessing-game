@@ -7,12 +7,43 @@ var guess = "";
 var dif = 0;
 var score = 0;
 
+var wordHints = {
+  "human": "Relating to people",
+  "fact": "A thing that is known to be true",
+  "risk": "A situation involving exposure to danger",
+  "beautiful": "Pleasing the senses or mind aesthetically",
+  "holiday": "A day of celebration or relaxation",
+  "pretty": "Attractive in a delicate way",
+  "grin": "A broad smile",
+  "misty": "Full of or covered with mist",
+  "true": "In accordance with fact or reality",
+  "love": "An intense feeling of deep affection",
+  "pillow": "A soft support for the head",
+  "Lamp": "A device that produces light",
+  "brake": "A device for slowing or stopping a vehicle",
+  "mobile": "Able to move or be moved freely",
+  "glorious": "Having great beauty and splendor",
+  "observe": "Notice or perceive something",
+  "action": "The fact or process of doing something",
+  "want": "Have a desire to possess or do something",
+  "serve": "Perform duties or services for another person",
+  "teddy": "A soft toy bear",
+  "creature": "An animal, as distinct from a human being",
+  "creepy": "Causing an unpleasant feeling of fear or unease",
+  "lumpy": "Full of or covered with lumps",
+  "window": "An opening in the wall or roof of a building",
+  "bite-sized": "Small enough to be eaten in one mouthful",
+  "observation": "The action or process of observing something",
+  "direful": "Extremely bad; dreadful",
+  "scarecrow": "An object made to resemble a human figure",
+  "quizzical": "Indicating mild or amused puzzlement",
+  "consist": "Be composed or made up of"
+};
 
 function updateScoreDisplay() {
   var previousScore = localStorage.getItem("previousScore");
   if (previousScore !== null) {
-    document.getElementById("scoreDisplay").innerText =
-      "Score: " + previousScore;
+    document.getElementById("scoreDisplay").innerText = "Score: " + previousScore;
   }
 }
 
@@ -22,24 +53,6 @@ function handleKeyPress(event) {
   }
 }
 
-function chooseDif1() {
-  dif = 1;
-  document.getElementById("startButton").style.display = "block";
-  document.getElementById("chooseDifficulty").style.display = "none";
-}
-
-function chooseDif2() {
-  dif = 2;
-  document.getElementById("startButton").style.display = "block";
-  document.getElementById("chooseDifficulty").style.display = "none";
-}
-
-function chooseDif3() {
-  dif = 3;
-  document.getElementById("startButton").style.display = "block";
-  document.getElementById("chooseDifficulty").style.display = "none";
-}
-
 function chooseDif(difficulty) {
   dif = difficulty;
   document.getElementById("startButton").style.display = "block";
@@ -47,15 +60,9 @@ function chooseDif(difficulty) {
 }
 
 function wordw() {
-  var easyWords = [
-    "human", "fact", "risk", "beautiful", "holiday", "pretty", "grin", "misty", "true", "love"
-  ];
-  var normalWords = [
-    "pillow", "Lamp", "brake", "mobile", "glorious", "observe", "action", "want", "serve", "teddy"
-  ];
-  var hardWords = [
-    "creature", "creepy", "lumpy", "window", "bite-sized", "observation", "direful", "scarecrow", "quizzical", "consist"
-  ];
+  var easyWords = ["human", "fact", "risk", "beautiful", "holiday", "pretty", "grin", "misty", "true", "love"];
+  var normalWords = ["pillow", "Lamp", "brake", "mobile", "glorious", "observe", "action", "want", "serve", "teddy"];
+  var hardWords = ["creature", "creepy", "lumpy", "window", "bite-sized", "observation", "direful", "scarecrow", "quizzical", "consist"];
 
   var randomWord;
 
@@ -72,7 +79,6 @@ function wordw() {
 
 function wordStart() {
   var wordLength = word.length;
-  var wordL_ = "";
   var count = wordLength;
 
   while (count > 0) {
@@ -87,16 +93,18 @@ function winCountFunc() {
   var count = word.length;
 
   while (count > 0) {
-    if (lettUsed.includes(word[count - 1])) {
-    } else {
+    if (!lettUsed.includes(word[count - 1])) {
       num += 1;
       lettUsed += word[count - 1];
     }
-
     count -= 1;
   }
 
   return num;
+}
+
+function showHint() {
+  document.getElementById("hint").innerText = "Hint: " + wordHints[word];
 }
 
 function start() {
@@ -108,31 +116,23 @@ function start() {
   } else if (dif == 2) {
     guessBomb = word.length;
   } else if (dif == 3) {
-    if (word.length % 2 == 0) {
-      guessBomb = word.length / 2;
-    } else {
-      guessBomb = (word.length - 1) / 2;
-    }
+    guessBomb = word.length % 2 == 0 ? word.length / 2 : (word.length - 1) / 2;
   }
 
   console.log(word);
   document.getElementById("mainGame").style.display = "block";
   document.getElementById("startButton").style.display = "none";
 
-  document.getElementById("question").innerHTML =
-    "<strong>Enter your first guess</strong>";
+  showHint();
+
+  document.getElementById("question").innerHTML = "<strong>Enter your first guess</strong>";
 
   wordStart();
 
   document.getElementById("RRguess").style.display = "block";
-  document.getElementById("rightGuess").innerHTML =
-    "word progress: " + wordGuess;
-  document.getElementById("wrongGuess").innerHTML =
-    "Wrong guesses: " + wrongGuess;
-  document.getElementById("guessesLeft").innerHTML =
-    "Guesses remaining: " + guessBomb;
-
-  var x = document.getElementById("guess").maxLength;
+  document.getElementById("rightGuess").innerHTML = "word progress: " + wordGuess;
+  document.getElementById("wrongGuess").innerHTML = "Wrong guesses: " + wrongGuess;
+  document.getElementById("guessesLeft").innerHTML = "Guesses remaining: " + guessBomb;
 }
 
 function enter() {
@@ -141,16 +141,14 @@ function enter() {
 
   if (lett.length === 1) {
     var rightOnot = isRightOnot(lett);
-    if (rightOnot == true) {
+    if (rightOnot) {
       NewCW(lett);
     } else {
       if (!wrongGuess.includes(lett)) {
-        console.log("Better try again!");
         wrongGuess.push(lett);
       }
       guessBomb -= 1;
     }
-  } else if (lett.length < 1) {
   } else {
     guessBomb -= 1;
   }
@@ -162,88 +160,65 @@ function enter() {
   if (winCount <= 0) {
     gameWin();
   }
-  document.getElementById("rightGuess").innerHTML =
-    "word progress: " + wordGuess;
-  document.getElementById("wrongGuess").innerHTML =
-    "Wrong guesses: " + wrongGuess;
-  document.getElementById("guessesLeft").innerHTML =
-    "Guesses remaining: " + guessBomb;
+  document.getElementById("rightGuess").innerHTML = "word progress: " + wordGuess;
+  document.getElementById("wrongGuess").innerHTML = "Wrong guesses: " + wrongGuess;
+  document.getElementById("guessesLeft").innerHTML = "Guesses remaining: " + guessBomb;
 }
 
-function isRightOnot(a) {
-  var n = word.includes(a);
-  return n;
-}
-
-function NewCW(letter) {
-  var count = 0;
-  winCount -= 1;
-
-  while (count <= word.length - 1) {
-    if (letter === word[count]) {
-      if (wordGuess[count] === letter) {
-      } else {
-      }
-
-      wordGuess[count] = letter;
-      count += 1;
-    } else {
-      count += 1;
+function isRightOnot(lett) {
+  var right = false;
+  for (var i = 0; i < word.length; i++) {
+    if (word[i] === lett && wordGuess[i] !== lett) {
+      right = true;
+      break;
     }
   }
+  return right;
+}
+
+function NewCW(lett) {
+  for (var i = 0; i < word.length; i++) {
+    if (word[i] === lett) {
+      wordGuess[i] = lett;
+    }
+  }
+  winCount--;
 }
 
 function gameLose() {
+  document.getElementById("youLose").style.display = "block";
   document.getElementById("mainGame").style.display = "none";
   document.getElementById("RRguess").style.display = "none";
-  document.getElementById("youLose").style.display = "block";
-  document.getElementById("correctWordWas").innerHTML =
-    "The correct word was " + word;
+  document.getElementById("correctWordWas").innerHTML = "The correct word was: " + word;
 }
 
-// function gameWin() {
-//   document.getElementById("mainGame").style.display = "none";
-//   document.getElementById("RRguess").style.display = "none";
-//   document.getElementById("youWin").style.display = "block";
-// }
-
 function gameWin() {
-  score += 10; // Increase score by 10 when the player wins
-  updateScoreDisplay(); // Update the score display
-  // Store the updated score in localStorage
-  localStorage.setItem("previousScore", score);
-  // Display the score in the "youWin" section
-  document.getElementById("scoreDisplay").innerText = "Score: " + score;
-  // Show the "youWin" section
+  document.getElementById("youWin").style.display = "block";
   document.getElementById("mainGame").style.display = "none";
   document.getElementById("RRguess").style.display = "none";
-  document.getElementById("youWin").style.display = "block";
+  score += 10; // Increment score by 10 for a win
+  localStorage.setItem("previousScore", score); // Save the score in local storage
+  updateScoreDisplay(); // Update the score display
 }
 
 function restart() {
-  // Retrieve the previous score from localStorage
-  var previousScore = localStorage.getItem("previousScore");
-
-  // Display the previous score if it exists
-  if (previousScore !== null) {
-    document.getElementById("previousScoreDisplay").innerText =
-      "Previous Score: " + previousScore;
-  }
-
-  // Other code in the function remains the same
-  document.getElementById("mainGame").style.display = "none";
-  document.getElementById("RRguess").style.display = "none";
-  document.getElementById("youLose").style.display = "none";
-  document.getElementById("youWin").style.display = "none";
-  document.getElementById("chooseDifficulty").style.display = "block";
-
   word = "";
   wordGuess = [];
   wrongGuess = [];
   guessBomb = 0;
   winCount = 1;
   guess = "";
-  dif = 0;
+  dif = 0;
+  document.getElementById("chooseDifficulty").style.display = "block";
+  document.getElementById("startButton").style.display = "none";
+  document.getElementById("mainGame").style.display = "none";
+  document.getElementById("youLose").style.display = "none";
+  document.getElementById("youWin").style.display = "none";
+  document.getElementById("RRguess").style.display = "none";
+  document.getElementById("hint").innerText = "";
+  updateScoreDisplay();
 }
 
+// Initialize score display on page load
+updateScoreDisplay();
 
